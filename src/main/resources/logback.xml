@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" scanPeriod="60 seconds">
+    <property name="LOG_NAME" value="application.log"/>
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %c: %M - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROLLING_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>../logs/${LOG_NAME}</File>
+        <encoder>
+            <pattern>%d{dd MMM yyyy HH:mm:ss} %-5p %c: %M - %m%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>../logs/${LOG_NAME}-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <root level="${log.level:-WARN}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ROLLING_FILE_APPENDER" />
+    </root>
+
+    <logger name="org.sandbox" level="INFO"/>
+</configuration>
